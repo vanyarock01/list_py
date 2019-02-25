@@ -1,12 +1,12 @@
 class List(object):
     """Linked list"""
 
-    def __init__(self, value, next_=None):
+    def __init__(self, value=None, next_=None):
         self._value = value
-        self.next = next_
-        self.current = self
+        self.next = next_.copy() if next_ else next_
 
     def __iter__(self):
+        self.current = self
         return self
 
     def __next__(self):
@@ -15,6 +15,24 @@ class List(object):
             return result
         else:
             raise StopIteration()
+
+    def __add__(self, tail):
+        result = self.copy()
+        for item in tail:
+            result.append(item)
+        return result
+
+    def copy(self):
+        result = List()
+        curr = result
+        prev = result
+        for item in self:
+            curr._value = item
+            curr.next = List()
+            prev = curr
+            curr = curr.next
+        prev.next = None
+        return result
 
     def print(self):
         for item in self:
@@ -27,14 +45,4 @@ class List(object):
             self.next.append(value)
 
 if __name__ == '__main__':
-    ll = List(
-        value=5, next_=List(
-            value=1, next_=List(
-                value=2, next_=List(
-                    value=4, next_=List(
-                        value=9)))))
-    # ll.print()
-    # ll.append(4)
-    ll.append(9)
-    ll.append(11)
-    ll.print()
+    # (1, (2, (3, None) ) )
