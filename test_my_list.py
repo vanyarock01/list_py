@@ -5,11 +5,15 @@ import my_list
 
 
 def random_alphanumeric(size=4):
-    return ''.join(random.choices(string.ascii_letters + string.digits, k=size))
+    if random.randint(0, 1):
+        return ''.join(
+            random.choices(string.ascii_letters + string.digits, k=size))
+    else:
+        return random.randint(-2**10, 2**10)
 
 
 def get_random_list(size=4):
-    return [random.randint(-2**10, 2**10) for _ in range(size)]
+    return [random_alphanumeric() for _ in range(size)]
 
 
 class ListAverageTest(unittest.TestCase):
@@ -22,11 +26,20 @@ class ListAverageTest(unittest.TestCase):
                 get_random_list(size=number))
 
     def test_iter(self):
+        # Проходим по стартовому набору и проверяем
+        # корректность итератора
         print("Testing iterator.")
         for data in self.data_set:
             sample = my_list.List() + data
             self.assertEqual(
                 data, list(sample))
+
+    def test_reversed(self):
+        print("Testing reverse iterator.")
+        for data in self.data_set:
+            sample = my_list.List() + data
+            self.assertEqual(
+                list(reversed(data)), list(reversed(sample)))
 
     def test_append(self):
         # Каждый список из тестового набора
