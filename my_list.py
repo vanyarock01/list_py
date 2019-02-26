@@ -70,5 +70,6 @@ if __name__ == '__main__':
     sample += List(9, next_=List(5))
     sample.print()
     sample.print_reversed()
+    print(list(sample))
     # for item in reversed(sample):
     #    print(item)
