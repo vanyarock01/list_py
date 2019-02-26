@@ -6,10 +6,8 @@ class List(object):
 
     def __init__(self, value=None, next_=None):
         self._value = value
-        self.prev = None
         if next_:
             self.next = next_.copy()
-            self.next.prev = self
         else:
             self.next = None
 
@@ -20,7 +18,7 @@ class List(object):
     def __next__(self):
         # Случай, когда список пустой
         if self.next == None and \
-                self._value == None and self.prev == None:
+                self._value == None:
             raise StopIteration()
 
         if self.current != None:
@@ -32,14 +30,11 @@ class List(object):
     def __reversed__(self):
         # Случай, когда список пустой
         if self.next == None and \
-                self._value == None and self.prev == None:
+                self._value == None:
             return
-        current = self
-        while current.next:
-            current = current.next
-        while current:
-            yield current._value
-            current = current.prev
+        if self.next:
+            yield from reversed(self.next)
+        yield self._value
 
     def __add__(self, tail):
         result = self.copy()
@@ -53,7 +48,6 @@ class List(object):
         prev = None
         for item in self:
             current._value = item
-            current.prev = prev
             current.next = List()
             prev = current
             current = current.next
@@ -74,12 +68,11 @@ class List(object):
     def append(self, value):
         # Случай, когда список пустой
         if self.next == None and \
-                self._value == None and self.prev == None:
+                self._value == None:
             self._value = value
         # Cлучай, когда текущий узел является последним
         elif self.next == None:
             self.next = List(value)
-            self.next.prev = self
         # Случай, когда текущий узел не является последним
         else:
             self.next.append(value)
