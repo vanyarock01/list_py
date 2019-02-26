@@ -27,6 +27,10 @@ class List(object):
             raise StopIteration()
 
     def __reversed__(self):
+        # Случай, когда список пустой
+        if self.next == None and \
+                self._value == None and self.prev == None:
+            return
         current = self
         while current.next:
             current = current.next
