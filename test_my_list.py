@@ -16,10 +16,11 @@ def get_random_list(size=4):
     return [random_alphanumeric() for _ in range(size)]
 
 
-class ListRandomTest(unittest.TestCase):
+class ListSampleTest(unittest.TestCase):
 
     def setUp(self):
         print("Init new test set.")
+        self.head = get_random_list(size=1)
         self.data_set = []
         for number in range(2**4):
             self.data_set.append(
@@ -27,31 +28,32 @@ class ListRandomTest(unittest.TestCase):
 
     def test_tail_init(self):
         # Тестирование классического конструктора (head, [tail])
-        # Проходим по инвертированным данным и 
+        # Проходим по инвертированным данным и
         for data in self.data_set:
             sample = None
             for item in reversed(data):
                 sample = my_list.List(item, sample)
+            sample = my_list.List(self.head[0], sample)
             if not sample:
                 sample = []
             self.assertEqual(
-                list(reversed(data)), list(reversed(sample)))
+                self.head + list(data), list(sample))
 
     def test_iter(self):
         # Проходим по стартовому набору и проверяем
         # корректность итератора
         print("Testing iterator.")
         for data in self.data_set:
-            sample = my_list.List() + data
+            sample = my_list.List(self.head[0]) + data
             self.assertEqual(
-                data, list(sample))
+                self.head + data, list(sample))
 
     def test_reversed(self):
         print("Testing reverse iterator.")
         for data in self.data_set:
-            sample = my_list.List() + data
+            sample = my_list.List(self.head[0]) + data
             self.assertEqual(
-                list(reversed(data)), list(reversed(sample)))
+                list(reversed(data)) + self.head, list(reversed(sample)))
 
     def test_append(self):
         # Каждый список из тестового набора
@@ -59,33 +61,11 @@ class ListRandomTest(unittest.TestCase):
         # c исходными данными
         print("Testing append.")
         for data in self.data_set:
-            sample = my_list.List()
+            sample = my_list.List(self.head[0])
             for item in data:
                 sample.append(item)
             self.assertEqual(
-                data, list(sample))
-
-    def test_copy(self):
-        # Cоздадим копии объекта sample несколько раз
-        # и посмотрим, изменяется ли при изменении
-        # копии новых элеменетов исходный объект
-        # Так же проверим цельность первоначального списка
-        print("Testing copy.")
-        for data in self.data_set:
-            sample = my_list.List()
-            sample += data
-            self.assertEqual(
-                data, list(sample))
-            for i in range(1, 2**5):
-                new_data = random.choice(self.data_set)
-                new_sample = sample.copy()
-                self.assertEqual(
-                    data, list(new_sample))
-                new_sample += new_data
-                self.assertEqual(
-                    data + new_data, list(new_sample))
-                self.assertEqual(
-                    data, list(sample))
+                self.head + data, list(sample))
 
     def test_add(self):
         # Для каждого набора тестовых данных
@@ -94,14 +74,14 @@ class ListRandomTest(unittest.TestCase):
         # где type(obj) ~ List
         print("Testing add op.")
         for data in self.data_set:
-            sample = my_list.List()
+            sample = my_list.List(self.head[0])
             new_sample = sample + data
             self.assertEqual(
-                data, list(new_sample))
-            data_list = my_list.List() + data
+                self.head + data, list(new_sample))
+            data_list = my_list.List(self.head[0]) + data
             new_sample = sample + data_list
             self.assertEqual(
-                data, list(new_sample))
+                self.head + self.head + data, list(new_sample))
 
 
 if __name__ == '__main__':

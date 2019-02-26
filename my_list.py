@@ -4,12 +4,9 @@ import sys
 class List(object):
     """Linked list"""
 
-    def __init__(self, value=None, next_=None):
+    def __init__(self, value, next_=None):
         self._value = value
-        if next_:
-            self.next = next_.copy()
-        else:
-            self.next = None
+        self.next = next_
 
     def __iter__(self):
         self.current = self
@@ -37,22 +34,11 @@ class List(object):
         yield self._value
 
     def __add__(self, tail):
-        result = self.copy()
+        result = List(list(self)[0])
+        for item in list(self)[1:]:
+            result.append(item)
         for item in tail:
             result.append(item)
-        return result
-
-    def copy(self):
-        result = List()
-        current = result
-        prev = None
-        for item in self:
-            current._value = item
-            current.next = List()
-            prev = current
-            current = current.next
-        if prev:
-            prev.next = None
         return result
 
     def print(self):
@@ -78,6 +64,7 @@ class List(object):
             self.next.append(value)
 
 if __name__ == '__main__':
+
     list_ = List(
         value=1, next_=List(value=2, next_=List(value=3)))
     list_.print()  # output: 1 2 3
