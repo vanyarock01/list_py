@@ -15,6 +15,11 @@ class List(object):
         return self
 
     def __next__(self):
+        # Случай, когда список пустой
+        if self.next == None and \
+                self._value == None and self.prev == None:
+            raise StopIteration()
+
         if self.current != None:
             self.current, result = self.current.next, self.current._value
             return result
@@ -45,7 +50,8 @@ class List(object):
             current.next = List()
             prev = current
             current = current.next
-        prev.next = None
+        if prev:
+            prev.next = None
         return result
 
     def print(self):
@@ -57,19 +63,23 @@ class List(object):
             print(item)
 
     def append(self, value):
-        if self.next == None:
+        # Случай, когда список пустой
+        if self.next == None and \
+                self._value == None and self.prev == None:
+            self._value = value
+        # Cлучай, когда текущий узел является последним
+        elif self.next == None:
             self.next = List(value)
             self.next.prev = self
+        # Случай, когда текущий узел не является последним
         else:
             self.next.append(value)
 
 if __name__ == '__main__':
     # (1, (2, (3, None) ) )
-    sample = List(1)
-    sample += [10, 11, 12]
-    sample += List(9, next_=List(5))
-    sample.print()
-    sample.print_reversed()
+    sample = List()
+    print(list(sample))
+    sample = sample.copy()
     print(list(sample))
     # for item in reversed(sample):
     #    print(item)
