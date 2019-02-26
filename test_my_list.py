@@ -16,7 +16,7 @@ def get_random_list(size=4):
     return [random_alphanumeric() for _ in range(size)]
 
 
-class ListAverageTest(unittest.TestCase):
+class ListRandomTest(unittest.TestCase):
 
     def setUp(self):
         print("Init new test set.")
@@ -24,6 +24,18 @@ class ListAverageTest(unittest.TestCase):
         for number in range(2**4):
             self.data_set.append(
                 get_random_list(size=number))
+
+    def test_tail_init(self):
+        # Тестирование классического конструктора (head, [tail])
+        # Проходим по инвертированным данным и 
+        for data in self.data_set:
+            sample = None
+            for item in reversed(data):
+                sample = my_list.List(item, sample)
+            if not sample:
+                sample = []
+            self.assertEqual(
+                list(reversed(data)), list(reversed(sample)))
 
     def test_iter(self):
         # Проходим по стартовому набору и проверяем
