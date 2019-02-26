@@ -43,8 +43,7 @@ class ListAverageTest(unittest.TestCase):
         for data in self.data_set:
             head = get_random_list(size=1)
             sample = my_list.List(head[0])
-            for item in data:
-                sample.append(item)
+            sample += data
             self.assertEqual(
                 head + data, list(sample))
             for i in range(1, 2**5):
@@ -52,12 +51,34 @@ class ListAverageTest(unittest.TestCase):
                 new_sample = sample.copy()
                 self.assertEqual(
                     head + data, list(new_sample))
-                for item in new_data:
-                    new_sample.append(item)
+                new_sample += new_data
                 self.assertEqual(
                     head + data + new_data, list(new_sample))
                 self.assertEqual(
                     head + data, list(sample))
+
+    def test_add(self):
+        # Для каждого набора тестовых данных
+        # проверим корректность выполнения операции +
+        # для случаев: obj + [...] и obj + obj,
+        # где type(obj) ~ List
+        print("Test add op")
+        for data in self.data_set:
+            head = get_random_list(size=1)
+            sample = my_list.List(head[0])
+            self.assertEqual(
+                head, list(sample))
+            new_sample = sample + data
+            self.assertEqual(
+                head + data, list(new_sample))
+            data_list = my_list.List(data[0])
+            data_list += data[1:]
+            new_sample = sample + data_list
+            self.assertEqual(
+                head + data, list(new_sample))
+
+    def test_iter(self):
+        pass
 
 
 if __name__ == '__main__':
