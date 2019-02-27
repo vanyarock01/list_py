@@ -1,4 +1,19 @@
-import sys
+
+
+class ListIter:
+
+    def __init__(self, list_):
+        self.current = list_
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self.current is None:
+            raise StopIteration
+        res = self.current._value
+        self.current = self.current._next
+        return res
 
 
 class List(object):
@@ -6,31 +21,30 @@ class List(object):
 
     def __init__(self, value, next_=None):
         self._value = value
-        self.next = next_
+        self._next = next_
 
     def __iter__(self):
-        self.current = self
-        return self
+        return ListIter(self)
 
     def __next__(self):
         # Случай, когда список пустой
-        if self.next == None and \
+        if self._next == None and \
                 self._value == None:
             raise StopIteration()
 
         if self.current != None:
-            self.current, result = self.current.next, self.current._value
+            self.current, result = self.current._next, self.current._value
             return result
         else:
             raise StopIteration()
 
     def __reversed__(self):
         # Случай, когда список пустой
-        if self.next == None and \
+        if self._next == None and \
                 self._value == None:
             return
-        if self.next:
-            yield from reversed(self.next)
+        if self._next:
+            yield from reversed(self._next)
         yield self._value
 
     def __add__(self, tail):
@@ -42,26 +56,28 @@ class List(object):
         return result
 
     def print(self):
-        for item in self:
-            sys.stdout.write(str(item) + " ")
-        sys.stdout.write("\n")
+        print(list(self)[0], end='')
+        for elem in list(self)[1:]:
+            print(' ', elem, end='')
+        print()
 
     def print_reversed(self):
-        for item in reversed(self):
-            sys.stdout.write(str(item) + " ")
-        sys.stdout.write("\n")
+        print(list(reversed(self))[0], end='')
+        for elem in list(reversed(self))[1:]:
+            print(' ', elem, end='')
+        print()
 
     def append(self, value):
         # Случай, когда список пустой
-        if self.next == None and \
+        if self._next == None and \
                 self._value == None:
             self._value = value
         # Cлучай, когда текущий узел является последним
-        elif self.next == None:
-            self.next = List(value)
+        elif self._next == None:
+            self._next = List(value)
         # Случай, когда текущий узел не является последним
         else:
-            self.next.append(value)
+            self._next.append(value)
 
 if __name__ == '__main__':
 
